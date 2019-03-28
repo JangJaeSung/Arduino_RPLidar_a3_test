@@ -1,5 +1,7 @@
+#include <PID_v1.h>
+
 #include <stdio.h>
-#include <Servo.h>
+//#include <Servo.h>
 #include <rplidar.h>
 #include <ros.h>
 
@@ -15,9 +17,9 @@ ros::NodeHandle nh;
 // Change the pin mapping based on your needs.
 #define RPLIDAR_MOTOR  3 // The PWM pin for control the speed of RPLIDAR's motor.
 
-Servo steerServo;
-Servo throttleMotor;
-RPLidar lidar(Serial, RPLIDAR_MOTOR);
+//Servo steerServo;
+//Servo throttleMotor;
+RPLidar lidar(Serial1, RPLIDAR_MOTOR);
 RPLidarPacket packet;
 
 const int rpm = 600;
@@ -28,7 +30,7 @@ ros::Publisher rp_msg("rp_msg", &scan_msg);
 void setup() {
   // bind the RPLIDAR driver to the arduino hardware serial
   nh.initNode();
-  Serial.begin(57600);
+  Serial1.begin(57600);
   //lidar.begin(Serial);
   nh.spinOnce();
   // set pin modes
@@ -48,18 +50,16 @@ void loop() {
   //angle = lidar.getCurrentPoint().angle;
   scan_msg.angle_min = angle;
 
-  if( lidar.processAvailable(&packet) )
-  {
-    if(packet.data[0] > 0){
-      digitalWrite(13, HIGH);
-      delay(1000);
-      digitalWrite(13, LOW);
-      delay(1000);
-    }
-  }
+ // if( lidar.processAvailable(&packet) )
+
+  digitalWrite(13, HIGH); 
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+ 
 
   rp_msg.publish(&scan_msg);
 
-  delay(1000);
+  //delay(1000);
   
 }
