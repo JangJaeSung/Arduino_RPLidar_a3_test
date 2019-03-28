@@ -40,3 +40,37 @@ index edd5dd5..a0cfc06 100644
  private:
  	/* Hardware */
 ```
+
+<Second>
+ Modify : correct rplidar.cpp by referring to HardwareSerial.h
+ 
+```diff
+diff --git a/rplidar.cpp b/rplidar.cpp
+index 4b2d602..74f1327 100644
+--- a/rplidar.cpp
++++ b/rplidar.cpp
+@@ -113,8 +113,9 @@ RPLidar::RPLidar(HardwareSerial &serial, int pwm_pin):
+ void RPLidar::setup(int motor_rpm)
+ {
+   pinMode(m_pwm_pin, OUTPUT);
+-  analogWriteFrequency(m_pwm_pin, PwmFrequency);
+-  m_serial.begin(UartBaudrate, SERIAL_8N1);
++  //analogWriteFrequency(m_pwm_pin, PwmFrequency);
++  //m_serial.begin(UartBaudrate, SERIAL_8N1);
++  m_serial.begin(UartBaudrate);
+   m_motor_setpoint_rpm=motor_rpm;
+   m_motor_actual_rpm=motor_rpm;
+   m_motor_pid.SetMode(AUTOMATIC);
+@@ -167,8 +168,9 @@ void RPLidar::start()
+ }
+
+ bool RPLidar::sendData()
+-{      
+-   int available=m_serial.availableForWrite();
++{  
++   //modify availableForWrite to available 
++   int available=m_serial.available();
+
+    while(available && m_tx_sent < m_tx_bytes)
+    {
+```
